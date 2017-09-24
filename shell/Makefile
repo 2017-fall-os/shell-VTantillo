@@ -8,8 +8,8 @@ vSh: vSh.o vToke.o
 vSh.o: vSh.c vToke.h
 	cc -c vSh.c
 
-vToke.o: vToke.c vToke.h
-	cc -c vToke.c vToke.h
+vToke.o: vToke.c
+	cc -c vToke.c
 
 clean:
 	rm -f *.o vSh *~
