@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "vToc.h"
+#include "vToke.h"
 #include "vSh.h"
 
 #define MAXBUF 1000
@@ -53,12 +53,11 @@ int main(int argc, char** argv, char** envp) {
     }
     
     // tokenize the command
-    cmd = vToc(cmdStr, ' ');
+    cmd = vToke(cmdStr, ' ');
     for (i = 0; cmd[i] != '\0'; i++) {
       printf("%s\n", cmd[i]);
     }
-
-    vFree(cmd);
+    
   }
   return 0;
 }
