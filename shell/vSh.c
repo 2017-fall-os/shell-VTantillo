@@ -32,29 +32,33 @@ int main(int argc, char** argv, char** envp) {
   char buf[MAXBUF];
   int len;
   int i;
-  char *exit2 = "exit";
   char *exitStr = "exit";
+  
   while(1) {
-    // Print prompt
+    // print prompt
     write(1, "$ ", 2);
-    // Read in command
+    
+    // read in command
     len = read(0, buf, (size_t)MAXBUF);
-    buf[len] = '\0';
+    // if command is empty, start from the beginning
+    if(len == 1) {
+      continue;
+    }
+    buf[len-1] = '\0';
     cmdStr = buf;
-    // Tokenize on spaces
-    cmd = vToc(cmd[0], ' ');
-    int compare;
-    compare = vCmp(cmdStr, exitStr);
-    printf("%d\n", compare);
-    // Check if the command is exit
-    if(compare) {
+    
+    // check if the command is exit 
+    if(vCmp(cmdStr, exitStr)) {
       exit(0);
     }
-    for(i = 0; cmd[i] != '\0'; i++) {
+    
+    // tokenize the command
+    cmd = vToc(cmdStr, ' ');
+    for (i = 0; cmd[i] != '\0'; i++) {
       printf("%s\n", cmd[i]);
     }
 
-    free(cmd);
+    vFree(cmd);
   }
   return 0;
 }
