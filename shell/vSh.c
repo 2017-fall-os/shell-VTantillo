@@ -35,14 +35,41 @@ char *vGetPath(char **envp) {
   
 }
 
+char *vConcat(char *str1, char *str2) {
+  char *t1;
+  char *t2;
+  char *new;
+  int len1;
+  int len2;
+  for (t1 = str1; *t1; t1++)
+    ;
+  for (t2 = str2; *t2; t2++)
+    ;
+  len1 = t1 - str1;
+  len2 = t2 - str2;
+
+  char *newStr = (char *)malloc(len2 + len1 + 1);
+  new = newStr;
+  for (t1 = str1; *t1; t1++, new++) {
+    *new = *t1;
+  }
+  for (t2 = str2; *t2; t2++, new++) {
+    *new = *t2;
+  }
+  new++;
+  *new = '\0';
+  return newStr;
+}
+
 int main(int argc, char** argv, char** envp) {
   char buf[MAXBUF];
 
   char **cmd;  // the tokenized command
   char **dir;  // the tokenized directories in path
   
-  char *cmdStr;
+  char *cmdStr;  // string that the user types in as the command
   char *exitStr = "exit";
+  char *cmdTst;
   
   char *path = vGetPath(envp); // the path environment variable
 
@@ -50,6 +77,7 @@ int main(int argc, char** argv, char** envp) {
   int i;
 
   dir = vToke(path, ':');
+
   
   while(1) {
     // print prompt
@@ -74,10 +102,10 @@ int main(int argc, char** argv, char** envp) {
     
     // tokenize the command
     cmd = vToke(cmdStr, ' ');
-
-    // 
-
-    
+    char *tmp = cmd[0];
+    // loop through all the posibilities of the command
+    // if none of them work, say command not found
+   
     int rc = fork();
     if (rc < 0) {
       // fork failed, exit
@@ -85,16 +113,30 @@ int main(int argc, char** argv, char** envp) {
     } else if (rc == 0) {
       // child
       int returnVal = execve(cmd[0], &cmd[0], envp);
-      write(1, "Command not found\n", 18);
       exit(0);
     } else {
       // parent
       int wc = wait(NULL);
     }
     
+    int j;
+    tmp = vConcat("/", tmp);
+    for (j = 0; dir[j] != '\0'; j++) {
+      cmdTst = vConcat(dir[j], tmp);
+      cmd[0] = cmdTst;
+      int rd = fork();
+      if (rd , 0) {
+	exit(1);
+      } else if (rd == 0) {
+	int retVal = execve(cmd[0], &cmd[0], envp);
+	exit(0);
+      } else {
+	int wd = wait(NULL);
+      }
+    }
+    
     vFree(cmd);
     cmd = NULL;
   }  // end of while
-  
   return 0;
 }  // end of main
