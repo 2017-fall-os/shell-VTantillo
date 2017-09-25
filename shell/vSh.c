@@ -70,8 +70,8 @@ int main(int argc, char** argv, char** envp) {
       cmdTst = vConcat(dir[j], tmp);
       cmd[0] = cmdTst;
       int rd = fork();
-      if (rd , 0) {
-	exit(1);
+      if (rd < 0) {
+        exit(1);
       } else if (rd == 0) {
 	int retVal = execve(cmd[0], &cmd[0], envp);
 	exit(0);
