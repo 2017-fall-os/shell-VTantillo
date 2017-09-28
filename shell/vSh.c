@@ -17,7 +17,7 @@ int main(int argc, char** argv, char** envp) {
   char* exitStr = "exit";
   char* cmdTst;  // command that will be appended to environment variable
 
-  char* path = vGetPath(envp); // the path environment variable
+  char* path = getenv("PATH"); // the path environment variable
 
   int len;  // length of command user types in
   int i;  // counter
@@ -50,35 +50,29 @@ int main(int argc, char** argv, char** envp) {
     char* tmp = cmd[0];
     // loop through all the posibilities of the command
     // if none of them work, say command not found
-
+    int j = 0;
     int rc = fork();
     if (rc < 0) {
       // fork failed, exit
       exit(1);
     } else if (rc == 0) {
       // child
+      char* org = cmd[0];
       int returnVal = execve(cmd[0], &cmd[0], envp);
+      tmp = vConcat("/", tmp);
+      // 
+      for (j = 0; dir[j] != '\0'; j++) {
+	cmdTst = vConcat(dir[j], tmp);
+	cmd[0] = cmdTst;
+	returnVal = execve(cmd[0], &cmd[0], envp);
+      }
+      fprintf(stderr, "Command not found\n", org, returnVal);
       exit(0);
     } else {
       // parent
       int wc = wait(NULL);
     }
 
-    int j;
-    tmp = vConcat("/", tmp);
-    for (j = 0; dir[j] != '\0'; j++) {
-      cmdTst = vConcat(dir[j], tmp);
-      cmd[0] = cmdTst;
-      int rd = fork();
-      if (rd < 0) {
-        exit(1);
-      } else if (rd == 0) {
-	int retVal = execve(cmd[0], &cmd[0], envp);
-	exit(0);
-      } else {
-	int wd = wait(NULL);
-      }
-    }
 
     vFree(cmd);
     cmd = NULL;
