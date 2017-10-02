@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#include "vLib.h"
 #include "vToke.h"
 
 #define BUFLEN 2000
@@ -25,11 +26,11 @@ char **vToke(char *str, char delim) {
     char **tokensEnd;
 
     // set string pointers;
-    for (strEnd = str; *strEnd; strEnd++) {
-        ;
-    }
+    for (strEnd = str; *strEnd; strEnd++)
+    ;
 
     numTokens = countTokens(str, delim);
+
     // create tokens array
     tokens = (char **)calloc((numTokens + 1), sizeof(char *));
     tokensEnd = tokens + numTokens;
@@ -68,6 +69,7 @@ char **vToke(char *str, char delim) {
         tokensP ++;
     }
     return tokens;
+
 }
 
 int countTokens(char *str, char delim) {
@@ -79,9 +81,8 @@ int countTokens(char *str, char delim) {
     int numTokens = 0;  // the number of tokens found
 
     // Find end of string
-    for (strEnd = str; *strEnd; strEnd++){
-        ;
-    }
+    for (strEnd = str; *strEnd; strEnd++)
+    ;
 
     for (strP = str; strP != strEnd; strP ++) {
         if (*strP == delim && lastChar == delim) {
@@ -100,29 +101,9 @@ int countTokens(char *str, char delim) {
         } else if (*strP == delim && lastChar != delim) {
             // end of a token
             lastChar = *strP;
+
         }
     }
     return numTokens;
-}
 
-char *vCopy(char *str) {
-    char *strP;
-    char *strEnd;
-    char *copy;
-    char *copyP;
-
-    int length;
-
-    for (strEnd = str; *strEnd; strEnd++){
-        ;
-    }
-
-    length = strEnd - str + 1;
-    copy = copyP = (char *)malloc(length);
-    for(strP = str; *strP; strP++) {
-        *copyP = *strP;
-        copyP++;
-    }
-    copyP = 0;
-    return copy;
 }
